@@ -63,7 +63,7 @@ namespace superHeroApi.Controllers
 
         [HttpDelete]
         [Route("delete-hero/{id}")]
-        public async Task<ActionResult<SuperHero>> deleteHero(int id)
+        public async Task<ActionResult> deleteHero(int id)
         {
 
             var foundHero = heroes.RemoveAll(hero => hero.Id == id);
