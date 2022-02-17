@@ -27,17 +27,6 @@ namespace superHeroApi.Controllers
             return Ok(heroes);
         }
 
-        [HttpPost]
-        [Route("test-hero")]
-        public async Task<ActionResult> TestHero([FromBody] SuperHero hero)
-        {
-            Console.WriteLine(hero.Id);
-            Console.WriteLine("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-            return Ok();
-
-        }
-
-
 
         [HttpGet]
         [Route("single-hero/{id}")]
@@ -63,15 +52,27 @@ namespace superHeroApi.Controllers
                 return BadRequest("hero dose not found");
 
             }
-
             foundHero.FirstName = body.FirstName;
             foundHero.LastName = body.LastName;
             foundHero.Name = body.Name;
             foundHero.Place = body.Place;
             return Ok(foundHero);
         }
-        
 
+
+
+        [HttpDelete]
+        [Route("delete-hero/{id}")]
+        public async Task<ActionResult<SuperHero>> deleteHero(int id)
+        {
+
+            var foundHero = heroes.RemoveAll(hero => hero.Id == id);
+            if (foundHero == 0)
+            {
+                return Ok("no HERO WAS DELETED");
+            }
+            return Ok(foundHero);
+        }
 
     }
 }
