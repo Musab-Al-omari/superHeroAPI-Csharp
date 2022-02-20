@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace superHeroApi.Migrations
 {
-    public partial class First : Migration
+    public partial class createFirstMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

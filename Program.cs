@@ -1,4 +1,4 @@
-using superHeroApi.Data;
+global using superHeroApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +10,6 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<DataContext>(options =>
 {
-    // options.UseMySQL(builder.Configuration.GetConnectionString("Default"));
     var connetionString = builder.Configuration.GetConnectionString("Default");
 
     options.UseMySql(connetionString,ServerVersion.AutoDetect(connetionString));

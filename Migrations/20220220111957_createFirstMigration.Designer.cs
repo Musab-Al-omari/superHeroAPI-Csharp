@@ -10,8 +10,8 @@ using superHeroApi.Data;
 namespace superHeroApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220217182706_First")]
-    partial class First
+    [Migration("20220220111957_createFirstMigration")]
+    partial class createFirstMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

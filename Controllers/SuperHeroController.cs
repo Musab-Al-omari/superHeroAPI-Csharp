@@ -1,5 +1,6 @@
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace superHeroApi.Controllers
 {
@@ -12,19 +13,29 @@ namespace superHeroApi.Controllers
                 new SuperHero{Id=2,Name="XX",FirstName="XX",LastName="XXXXC",Place="XXXX"},
                 new SuperHero{Id=3,Name="CC",FirstName="CCC",LastName="CCCCC",Place="CCCC"},
             };
+        private readonly DataContext _context;
+
+        public SuperHeroController(DataContext context)
+        {
+            this._context = context;
+        }
+
+
         [HttpGet]
         [Route("super-hero")]
         public async Task<ActionResult<List<SuperHero>>> Get()
         {
-            return Ok(heroes);
+            return Ok(await _context.SuperHero.ToListAsync());
         }
+
 
         [HttpPost]
         [Route("add-hero")]
         public async Task<ActionResult<List<SuperHero>>> AddHero(SuperHero hero)
         {
-            heroes.Add(hero);
-            return Ok(heroes);
+            _context.SuperHero.Add(hero);
+            var isAdded = await _context.SaveChangesAsync();
+            return Ok(isAdded);
         }
 
 
@@ -33,7 +44,7 @@ namespace superHeroApi.Controllers
         public async Task<ActionResult<SuperHero>> GetSingleHero(int id)
         {
 
-            var foundHero = heroes.Find(hero => hero.Id == id);
+            var foundHero = await _context.SuperHero.FindAsync(id);
             if (foundHero == null)
             {
                 return BadRequest("hero dose not found");
@@ -46,16 +57,17 @@ namespace superHeroApi.Controllers
         [Route("edit-hero/{id}")]
         public async Task<ActionResult<SuperHero>> EditSingleHero(int id, [FromBody] SuperHero body)
         {
-            var foundHero = heroes.Find(hero => hero.Id == id);
+            var foundHero = await _context.SuperHero.FindAsync(id);
             if (foundHero == null)
             {
                 return BadRequest("hero dose not found");
-
             }
+
             foundHero.FirstName = body.FirstName;
             foundHero.LastName = body.LastName;
             foundHero.Name = body.Name;
             foundHero.Place = body.Place;
+            await _context.SaveChangesAsync();
             return Ok(foundHero);
         }
 
@@ -65,12 +77,13 @@ namespace superHeroApi.Controllers
         [Route("delete-hero/{id}")]
         public async Task<ActionResult> deleteHero(int id)
         {
-
-            var foundHero = heroes.RemoveAll(hero => hero.Id == id);
-            if (foundHero == 0)
+            var foundHero = await _context.SuperHero.FindAsync(id);
+            if (foundHero == null)
             {
                 return Ok("no HERO WAS DELETED");
             }
+            _context.SuperHero.Remove(foundHero);
+            await _context.SaveChangesAsync();
             return Ok(foundHero);
         }
 
